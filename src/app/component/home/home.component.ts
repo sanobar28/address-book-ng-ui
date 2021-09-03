@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Addressbook } from 'src/app/model/addressbook';
+import { HttpService } from 'src/app/service/http.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +11,54 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private httpService: HttpService,  
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) { }
+
+
+  public personCount: number = 10;
+  public addressbookList: Addressbook[] = [];
+  message: string;
 
   ngOnInit(): void {
+    this.httpService.getAddressBook().subscribe(responce => {
+      this.addressbookList = responce.data;
+      console.log(responce);
+
+      this.personCount = this.addressbookList.length;
+      console.log(this.addressbookList.length);
+    });
+  }
+
+  /**
+   * To delete contact details by id
+   * @param id contact id
+   */
+   remove(id: number) {
+    this.httpService.deletePersonDetails(id).subscribe(data => {
+      console.log(data);
+      this.message= "Contact Deleted Successfully";
+      this.openSnackBar(this.message, "CLOSE")
+      this.ngOnInit();
+    });
+  }
+
+  update(addressbook: Addressbook){
+    console.log(addressbook);
+    
+  }
+
+  /**
+   * 
+   * @param message opens snackbar message on submit form
+   * @param action 
+   */
+   openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
 }

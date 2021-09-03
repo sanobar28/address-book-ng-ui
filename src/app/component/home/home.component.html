@@ -1,1 +1,43 @@
-<p>home works!</p>
+<app-header></app-header>
+
+
+<div class="main-content">
+    <div class="header-content">
+        <div class="address-detail-text">
+            Person Details
+            <div class="person-count">{{personCount}}</div>
+        </div>
+        <a class="add-button" routerLink="/add">
+            <img src="../assets/icons/add-24px.svg" alt="">Add Person
+        </a>
+    </div>
+    <div class="table-main">
+        <table id ="display" class="table">
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Phone</th>
+                <th>Zip</th>
+                <th>Action</th>
+            </tr>
+            <tr *ngFor="let address of addressbookList">
+                <td>{{address.name}}</td>
+                <td>{{address.address}}</td>
+                <td>{{address.city}}</td>
+                <td>{{address.state}}</td>
+                <td>{{address.phone}}</td>
+                <td>{{address.zip}}</td>
+       
+                <td>
+                  <img id={{address.id}} (click)="remove(address.id)" (click)="openSnackBar('Deleted Successfully', 'CLOSE')" src="../assets/icons/delete-black-18dp.svg"
+                   alt="delete">
+                  <img id="{{address.id}}" (onclick)="update(address)" src="../assets/icons/create-black-18dp.svg" 
+                   alt="edit">
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+       
