@@ -1,1 +1,107 @@
 <app-header></app-header>
+
+<div>
+  <div class="form-content">
+    <div class="form">
+      <span class="form-head">PERSON ADDRESS FORM</span>
+      <a routerLink="/home">
+        <img src="../assets/images/cancel.jpeg" alt="cancel" class="close">
+      </a>
+    </div>
+  </div>
+
+  <div class="row-content form-content">
+    <form class="form-form" [formGroup]="addressBookFormGroup" (ngSubmit)="onSubmit()">
+
+      <!------Input Name------>
+      <div class="row-content">
+        <mat-label>Person Name</mat-label>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <input class="name-input" formControlName="name" matInput placeholder="Your Name" autocomplete="off">
+
+          <mat-error *ngIf="checkError('name', 'required')">Name is required</mat-error>
+          <mat-error *ngIf="checkError('name', 'pattern')">Invalid Name</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Input Phone Number -->
+      <div class="row-content">
+        <mat-label>Phone Number</mat-label>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <input class="name-input" formControlName="phone" matInput placeholder="" autocomplete="off">
+
+          <mat-error *ngIf="checkError('phone', 'required')">Phone Number is required</mat-error>
+          <mat-error *ngIf="checkError('phone', 'pattern')">Please enter valid phone number</mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <!-- Input Address -->
+      <div class="row-content">
+        <mat-label>Address</mat-label>
+        <mat-form-field class="example-full-width" appearance="outline">
+          <textarea matInput class="input" formControlName="address" placeholder="" style="height:100px"
+            autocomplete="off"></textarea>
+          <mat-error *ngIf="checkError('address', 'required')">Please enter address</mat-error>
+        </mat-form-field>
+      </div>
+
+
+      <!-- Select City State and Input Zip -->
+      <div class="row-content-address">
+
+        <div class="city-container subAddress">
+          <label for="city">Select City</label>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="--- SELECT CITY ---" [formControl]="selectedCity" autocomplete="off">
+              <mat-option *ngFor="let city of cities" [value]="city" ngDefaultControl formControlName="city">
+                {{city}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="state-container subAddress">
+          <label for="state">Select State</label>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="--- SELECT STATE ---" [formControl]="selectedState" autocomplete="off">
+              <mat-option *ngFor="let state of states" [value]="state" ngDefaultControl formControlName="state">
+                {{state}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="zip-container subAddress">
+          <label for="zip">Zip Code</label>
+          <mat-form-field class="example-full-width" appearance="outline">
+            <input class="name-input" formControlName="zip" matInput placeholder="" autocomplete="off">
+
+            <mat-error *ngIf="checkError('zip', 'required')">Please enter Zipcode</mat-error>
+            <mat-error *ngIf="checkError('zip', 'pattern')">Invalid zipcode</mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+      <!-- For post request it will show add and reset buttons or execute else block -->
+      <div *ngIf="router.url === '/add'; else elseBlock">
+        <div class="add-reset">
+          <button class="addButton button" type="submit" id="addButton">Add</button>
+          <button class="resetButton button" type="reset" id="resetButton">Reset</button>
+        </div>
+      </div>
+
+      <!-- For put request it will show update and cancle buttons -->
+      <ng-template #elseBlock>
+        <div class="add-reset">
+          <button class="addButton button" id="addButton">Update</button>
+          <a routerLink="/home">
+            <button class="button cancelButton">Cancel</button>
+          </a>
+        </div>
+      </ng-template>
+
+    </form>
+  </div>
+</div>

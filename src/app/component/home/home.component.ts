@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Addressbook } from 'src/app/model/addressbook';
 import { HttpService } from 'src/app/service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DataService } from 'src/app/service/data.service';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private httpService: HttpService,  
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dataService: DataService, 
   ) { }
 
 
@@ -45,9 +47,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  /**
+   * To update contact by id
+   * @param addressbook 
+   */
   update(addressbook: Addressbook){
-    console.log(addressbook);
-    
+    this.dataService.changeAddressBook(addressbook);
+    this.router.navigateByUrl('/add/' + addressbook.id)
   }
 
   /**

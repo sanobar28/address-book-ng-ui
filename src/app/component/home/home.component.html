@@ -14,13 +14,13 @@
     <div class="table-main">
         <table id ="display" class="table">
             <tr>
-                <th>Name</th>
+                <th>Full Name</th>
                 <th>Address</th>
                 <th>City</th>
                 <th>State</th>
                 <th>Phone</th>
                 <th>Zip</th>
-                <th>Action</th>
+                <th></th>
             </tr>
             <tr *ngFor="let address of addressbookList">
                 <td>{{address.name}}</td>
@@ -33,7 +33,7 @@
                 <td>
                   <img id={{address.id}} (click)="remove(address.id)" (click)="openSnackBar('Deleted Successfully', 'CLOSE')" src="../assets/icons/delete-black-18dp.svg"
                    alt="delete">
-                  <img id="{{address.id}}" (onclick)="update(address)" src="../assets/icons/create-black-18dp.svg" 
+                  <img id={{address.id}} (click)="update(address)" src="../assets/icons/create-black-18dp.svg" 
                    alt="edit">
                 </td>
               </tr>
