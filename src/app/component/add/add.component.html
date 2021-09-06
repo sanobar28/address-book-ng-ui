@@ -1,17 +1,18 @@
 <app-header></app-header>
 
 <div>
+  
   <div class="form-content">
-    <div class="form">
-      <span class="form-head">PERSON ADDRESS FORM</span>
-      <a routerLink="/home">
-        <img src="../assets/images/cancel.jpeg" alt="cancel" class="close">
-      </a>
-    </div>
-  </div>
+    <form class="form" [formGroup]="addressBookFormGroup" (ngSubmit)="onSubmit()">
 
-  <div class="row-content form-content">
-    <form class="form-form" [formGroup]="addressBookFormGroup" (ngSubmit)="onSubmit()">
+      <div class="form-head">
+        <span class="head">PERSON ADDRESS FORM</span>
+
+        <!--Cancel Button-->
+        <a routerLink="/home">
+            <img src="../assets/images/cancel.jpeg" alt="" width="3%" id="cancel-icon" class="close" style="float: right">
+        </a>
+    </div>
 
       <!------Input Name------>
       <div class="row-content">
