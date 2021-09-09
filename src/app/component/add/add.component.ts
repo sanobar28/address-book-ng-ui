@@ -101,7 +101,7 @@ export class AddComponent implements OnInit {
    ngOnInit(): void {
     if(this.activatedRoute.snapshot.params['id'] != undefined) {
       this.dataService.currentAddressBook.subscribe(addressbook => {
-        if(Object.keys(this.addressbook).length !== 0) {
+        if(Object.keys(addressbook).length !== 0) {
           this.addressBookFormGroup.patchValue({
             name:addressbook.name,
             phone:addressbook.phone,
