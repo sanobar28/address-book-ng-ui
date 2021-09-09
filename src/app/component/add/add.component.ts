@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { Addressbook } from 'src/app/model/addressbook';
 import { FormArray, FormBuilder, FormControl, Validators, FormsModule } from '@angular/forms';
 
@@ -8,6 +8,9 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataService } from 'src/app/service/data.service';
+import { HomeComponent } from '../home/home.component';
+import {  RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators"
+
 
 @Component({
   selector: 'app-add',
@@ -56,7 +59,8 @@ export class AddComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     public router: Router,
     private dataService: DataService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private addressbookList: HomeComponent
   ) {
     this.addressBookFormGroup = this.formBuilder.group({
       name: new FormControl('', [Validators.required, , Validators.pattern("^[A-Z][a-zA-z\\s]{2,}$")]),
@@ -130,9 +134,9 @@ export class AddComponent implements OnInit {
         this.httpService.addAddressBook(this.addressbook).subscribe(response => {
           console.log(response);
           this.router.navigateByUrl('/home');
-        });
-      }
+        }, error => this.openSnackBar("Contact already exist!", "CLOSE"));
     }
 
-   
+}
+
 }

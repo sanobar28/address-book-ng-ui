@@ -4,6 +4,7 @@ import { Addressbook } from 'src/app/model/addressbook';
 import { HttpService } from 'src/app/service/http.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataService } from 'src/app/service/data.service';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,7 @@ export class HomeComponent implements OnInit {
   public addressbookList: Addressbook[] = [];
   message: string;
 
+
   ngOnInit(): void {
     this.httpService.getAddressBook().subscribe(responce => {
       this.addressbookList = responce.data;
@@ -35,7 +37,7 @@ export class HomeComponent implements OnInit {
   }
 
   /**
-   * To delete contact details by id
+   * To delete contact details by id 
    * @param id contact id
    */
    remove(id: number) {
@@ -53,7 +55,7 @@ export class HomeComponent implements OnInit {
    */
   update(addressbook: Addressbook){
     this.dataService.changeAddressBook(addressbook);
-    this.router.navigateByUrl('/add/' + addressbook.id)
+    this.router.navigateByUrl('/edit/' + addressbook.id)
   }
 
   /**
