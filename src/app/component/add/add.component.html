@@ -51,27 +51,28 @@
       <!-- Select City State and Input Zip -->
       <div class="row-content-address">
 
+        <div class="state-container subAddress">
+          <label for="state">Select State</label>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="--- SELECT STATE ---" (selectionChange)="getCity($event.source.value)" ngDefaultControl formControlName="state" autocomplete="off">
+              <mat-option *ngFor="let state of states" [value]="state">
+                {{state}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
         <div class="city-container subAddress">
           <label for="city">Select City</label>
           <mat-form-field appearance="outline">
-            <mat-select placeholder="--- SELECT CITY ---" [formControl]="selectedCity" autocomplete="off">
-              <mat-option *ngFor="let city of cities" [value]="city" ngDefaultControl formControlName="city">
+            <mat-select placeholder="--- SELECT CITY ---" ngDefaultControl formControlName="city" autocomplete="off">
+              <mat-option *ngFor="let city of cities" [value]="city" >
                 {{city}}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
-        <div class="state-container subAddress">
-          <label for="state">Select State</label>
-          <mat-form-field appearance="outline">
-            <mat-select placeholder="--- SELECT STATE ---" [formControl]="selectedState" autocomplete="off">
-              <mat-option *ngFor="let state of states" [value]="state" ngDefaultControl formControlName="state">
-                {{state}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
 
         <div class="zip-container subAddress">
           <label for="zip">Zip Code</label>

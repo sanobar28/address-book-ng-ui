@@ -29,5 +29,8 @@ baseUrl: String = "http://localhost:8080/addressbook";
     return this.httpClient.put(`${this.baseUrl}/updatecontact/${id}`, addressbook);
   }
   
+  getStateDetails(): Observable<any> {
+    return this.httpClient.get(this.baseUrl + "/getStateAndCity");
+  }
   
 }

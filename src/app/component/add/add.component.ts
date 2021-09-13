@@ -9,7 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataService } from 'src/app/service/data.service';
 import { HomeComponent } from '../home/home.component';
-import {  RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators"
+import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators"
+
 
 
 @Component({
@@ -24,26 +25,12 @@ export class AddComponent implements OnInit {
   public addressBookFormGroup: FormGroup;
   message: string;
 
+  states: Array<any> = [];
+  stateDetails: Array<any> = [];
+  cities: Array<any> = [];
 
 
-  /**
-   * Array of strings for storing city and state names
-   */
-  cities: string[] = [
-    "Mumbai", "Pune", "Nagpur", "Jaipur", "Udaipur", "Chennai", "Banglore", "Hydrabad", "Ahamdabad"
-  ]
 
-
-  states: string[] = [
-    "Maharashtra", "Karnataka", "Rajasthan", "Telangana", "TamilNadu", "Gujrat"
-  ]
-
-
-  /**
-   * Dynamically changes the selected value for city and state
-   */
-  selectedCity = new FormControl('');
-  selectedState = new FormControl('');
 
   /**
    * Creating Objects and creating address book object using form builder
@@ -60,17 +47,19 @@ export class AddComponent implements OnInit {
     public router: Router,
     private dataService: DataService,
     private snackBar: MatSnackBar,
-    private addressbookList: HomeComponent
+    private addressbookList: HomeComponent,
   ) {
     this.addressBookFormGroup = this.formBuilder.group({
       name: new FormControl('', [Validators.required, , Validators.pattern("^[A-Z][a-zA-z\\s]{2,}$")]),
       phone: new FormControl('', [Validators.required, , Validators.pattern("^[7-9][0-9]{9}$")]),
       address: new FormControl('', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\s]{3,}$")]),
-      city: this.selectedCity,
-      state: this.selectedState,
+      city: new FormControl('', Validators.required),
+      state: new FormControl('', Validators.required),
       zip: new FormControl('', [Validators.required, , Validators.pattern("^[1-9][0-9]{5,}$")])
     })
   }
+
+
 
   /**
    * To show error message for invalid or missing data
@@ -98,22 +87,67 @@ export class AddComponent implements OnInit {
   /**
     * To set previously submmitted form values while updating form data
     */
-   ngOnInit(): void {
-    if(this.activatedRoute.snapshot.params['id'] != undefined) {
+  ngOnInit(): void {
+    this.getState();
+
+    if (this.activatedRoute.snapshot.params['id'] != undefined) {
+      this.addressBookFormGroup.controls['phone'].disable();
       this.dataService.currentAddressBook.subscribe(addressbook => {
-        if(Object.keys(addressbook).length !== 0) {
+        if (Object.keys(addressbook).length !== 0) {
           this.addressBookFormGroup.patchValue({
-            name:addressbook.name,
-            phone:addressbook.phone,
-            address:addressbook.address,
-            state:addressbook.state,
-            city:addressbook.city,
-            zip:addressbook.zip
+            name: addressbook.name,
+            phone: addressbook.phone,
+            address: addressbook.address,
+            zip: addressbook.zip,
+            state: addressbook.state,
+            city: addressbook.city
           });
         }
       });
     }
   }
+
+
+  /**
+   * Method to get state and there cities and as array
+   */
+  getState(): void {
+    this.httpService.getStateDetails().subscribe(data => {
+      this.stateDetails = data.data;
+      console.log(this.stateDetails);
+      for (let i = 0; i < this.stateDetails.length; i++) {
+        this.states.push(this.stateDetails[i]?.name);
+      }
+    });
+  }
+
+
+  /**
+   * When user selects state, this method will render city names belongs
+   * to selected state. 
+   * @param state  state name selected by user
+   */
+  cityList(state) {
+    for (let i = 0; i < this.stateDetails.length; i++) {
+      if (this.stateDetails[i]?.name === state) {
+        this.cities = this.stateDetails[i]?.city;
+      }
+    }
+  }
+
+
+
+  /**
+   * At start form will set value  of city empty. And when user selects state it 
+   * will show city list belongs to selected state.
+   * @param state 
+   */
+  getCity(state) {
+    this.addressBookFormGroup.get('city').setValue("");
+    this.cityList(state);
+  }
+
+
 
   /**
      * Submit form method in which it is checking user input validations errors.
@@ -123,20 +157,28 @@ export class AddComponent implements OnInit {
      */
   onSubmit(): void {
 
-      this.addressbook = this.addressBookFormGroup.value;
+    this.addressBookFormGroup.controls['phone'].enable();
+
+    this.addressbook = this.addressBookFormGroup.value;
+
+    if (this.addressBookFormGroup.invalid) {
+      this.openSnackBar("Please enter all details", 'CLOSE');
+    } else {
       if (this.activatedRoute.snapshot.params['id'] != undefined) {
         this.httpService.updatePersonDetails(this.activatedRoute.snapshot.params['id'], this.addressbook).subscribe(response => {
           console.log(response);
           this.router.navigateByUrl('/home');
+          this.openSnackBar("Contact Updated Successfully", "CLOSE");
         });
       }
       else {
         this.httpService.addAddressBook(this.addressbook).subscribe(response => {
           console.log(response);
           this.router.navigateByUrl('/home');
+          this.openSnackBar("Form submitted Successfully", "CLOSE");
         }, error => this.openSnackBar("Contact already exist!", "CLOSE"));
+      }
     }
-
-}
+  }
 
 }
